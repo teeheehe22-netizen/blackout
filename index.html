@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nothing to See Here</title>
+
   <style>
     html, body {
       margin: 0;
@@ -11,35 +12,34 @@
       height: 100%;
       width: 100%;
       background-color: black;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Courier New', monospace;
       color: #00ff00;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
 
     .terminal {
       text-align: center;
-      max-width: 800px;
       width: 90%;
-      padding: 20px;
+      max-width: 800px;
     }
 
     h1 {
       font-size: 3rem;
-      color: #00ff00;
-      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+      text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00;
       animation: flicker 2s infinite;
       margin-bottom: 1rem;
     }
 
     @keyframes flicker {
       0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-      20%, 22%, 24%, 55% { opacity: 0.4; }
+      20%, 22%, 24%, 55% { opacity: 0.3; }
     }
 
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       margin-bottom: 2rem;
       display: inline-block;
     }
@@ -47,91 +47,106 @@
     .cursor {
       display: inline-block;
       width: 10px;
-      background-color: #00ff00;
-      animation: blink 1s step-start infinite;
-      margin-left: 2px;
+      height: 1em;
+      background: #00ff00;
+      animation: blink 1s infinite;
+      margin-left: 5px;
     }
 
     @keyframes blink {
-      50% { background-color: transparent; }
-      100% { background-color: #00ff00; }
+      50% { background: transparent; }
     }
 
-    /* FLAGS (REAL AND FAKE) */
+    /* FLAGS */
     .flag {
-      color: black;       /* invisible on black background */
-      user-select: text;  /* highlight to see */
-      font-size: 1rem;
-      margin: 5px 0;
+      color: black;
+      user-select: text;
       display: block;
+      margin: 6px 0;
+      text-decoration: none;
       opacity: 0;
-      text-decoration: none; /* remove underline */
     }
 
     .flag:hover {
-      color: #333333; /* subtle hover effect, still mostly invisible */
+      color: #222;
+    }
+
+    /* REAL FLAG IN CORNER */
+    .real-flag {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: black; /* invisible on black background */
+      user-select: text;
+      font-size: 1rem;
     }
   </style>
 </head>
+
 <body>
+
+  <!-- Real flag in corner -->
+  <div class="real-flag">key: FLAG-12345</div>
+
   <div class="terminal">
-    <!-- Real hidden flag -->
-    <a class="flag" href="#">key: FLAG-12345</a>
 
     <h1>ACCESS DENIED</h1>
+
     <h2 id="subtitle"></h2><span class="cursor"></span>
 
     <!-- Fake flags -->
-    <a class="flag" href="#" target="_blank">key: FLAG-CHOOSE_ME</a>
-    <a class="flag" href="#" target="_blank">key: FLAG-PROBABLY_NOT</a>
-    <a class="flag" href="#" target="_blank">key: FLAG-NO_ITS_ME</a>
+    <a class="flag" target="_blank">key: FLAG-PICK_ME</a>
+    
+    <a class="flag" target="_blank">key: FLAG-PROBABLY_NOT</a>
+    
+    <a class="flag" target="_blank">key: FLAG-ABSOLUTELY</a>
+
   </div>
 
   <script>
-    // --- Typing animation for subtitle ---
-    const subtitleText = "Nothing to see here...";
-    const subtitleEl = document.getElementById('subtitle');
-    let subtitleIndex = 0;
+    // Typing subtitle
+    const text = "Nothing to see here...";
+    const el = document.getElementById("subtitle");
+    let i = 0;
 
-    function typeSubtitle() {
-      if(subtitleIndex < subtitleText.length) {
-        subtitleEl.textContent += subtitleText[subtitleIndex];
-        subtitleIndex++;
-        setTimeout(typeSubtitle, 100);
+    function type() {
+      if (i < text.length) {
+        el.textContent += text[i];
+        i++;
+        setTimeout(type, 90);
       } else {
-        typeFlags();
+        showFlags();
       }
     }
 
-    // --- Typing animation for all flags ---
-    const flags = document.querySelectorAll('.flag');
-    let flagIndex = 0;
-
-    // Array of random URLs for fake flags
-    const randomPages = [
-      'https://www.google.com/',
-      'https://www.churchofjesuschrist.org/?lang=eng',
-      'https://www.byu.edu/',
-      'https://watchbutdonotlearn.github.io/'
+    // Random links for fake flags
+    const links = [
+      "https://example.com",
+      "https://google.com",
+      "https://wikipedia.org",
+      "https://github.com",
+      "https://youtube.com"
     ];
 
-    // Assign random pages to fake flags (keep real flag "#")
-    flags.forEach((flag, i) => {
-      if(i > 0) { // skip first real flag
-        const randIndex = Math.floor(Math.random() * randomPages.length);
-        flag.href = randomPages[randIndex];
-      }
+    const flags = document.querySelectorAll(".flag");
+
+    flags.forEach((flag) => {
+      const rand = Math.floor(Math.random() * links.length);
+      flag.href = links[rand];
     });
 
-    function typeFlags() {
-      if(flagIndex < flags.length) {
-        flags[flagIndex].style.opacity = 1;
-        flagIndex++;
-        setTimeout(typeFlags, 500);
+    // Reveal flags one by one
+    let f = 0;
+    function showFlags() {
+      if (f < flags.length) {
+        flags[f].style.opacity = 1;
+        f++;
+        setTimeout(showFlags, 400);
       }
     }
 
-    typeSubtitle();
+    type();
   </script>
+
 </body>
 </html>
