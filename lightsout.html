@@ -1,32 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Nothing to see here</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing to See Here</title>
   <style>
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
       background-color: black;
-      color: #00ff00; /* hacker green */
-      font-family: monospace;
-      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; /* glow */
+      font-family: 'Courier New', Courier, monospace;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .hidden-flag {
-      color: black;          /* invisible on black background */
-      text-shadow: none;     /* remove glow so it stays hidden */
+    .terminal {
+      text-align: center;
+      max-width: 800px;
+      width: 90%;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+      animation: flicker 2s infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 22%, 24%, 55% { opacity: 0.4; }
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      display: inline-block;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #00ff00;
+      animation: blink 1s step-start infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      50% { background-color: transparent; }
+      100% { background-color: #00ff00; }
+    }
+
+    /* FLAGS (REAL AND FAKE) */
+    .flag {
+      color: black;       /* invisible on black background */
+      user-select: text;  /* highlight to see */
+      font-size: 1rem;
+      margin: 5px 0;
+      display: block;
+      opacity: 0;
+      text-decoration: none; /* remove underline */
+    }
+
+    .flag:hover {
+      color: #333333; /* subtle hover effect, still mostly invisible */
     }
   </style>
 </head>
 <body>
+  <div class="terminal">
+    <!-- Real hidden flag -->
+    <a class="flag" href="#">key: FLAG-12345</a>
 
-  <h1>...</h1>
+    <h1>ACCESS DENIED</h1>
+    <h2 id="subtitle"></h2><span class="cursor"></span>
 
-  <p>
-    nothing here
-  </p>
+    <!-- Fake flags -->
+    <a class="flag" href="#" target="_blank">key: FLAG-CHOOSE_ME</a>
+    <a class="flag" href="#" target="_blank">key: FLAG-PROBABLY_NOT</a>
+    <a class="flag" href="#" target="_blank">key: FLAG-NO_ITS_ME</a>
+  </div>
 
-  <p class="hidden-flag">
-    key: FLAG-12345
-  </p>
+  <script>
+    // --- Typing animation for subtitle ---
+    const subtitleText = "Nothing to see here...";
+    const subtitleEl = document.getElementById('subtitle');
+    let subtitleIndex = 0;
 
+    function typeSubtitle() {
+      if(subtitleIndex < subtitleText.length) {
+        subtitleEl.textContent += subtitleText[subtitleIndex];
+        subtitleIndex++;
+        setTimeout(typeSubtitle, 100);
+      } else {
+        typeFlags();
+      }
+    }
+
+    // --- Typing animation for all flags ---
+    const flags = document.querySelectorAll('.flag');
+    let flagIndex = 0;
+
+    // Array of random URLs for fake flags
+    const randomPages = [
+      'https://www.google.com/',
+      'https://www.churchofjesuschrist.org/?lang=eng',
+      'https://www.byu.edu/',
+      'https://watchbutdonotlearn.github.io/'
+    ];
+
+    // Assign random pages to fake flags (keep real flag "#")
+    flags.forEach((flag, i) => {
+      if(i > 0) { // skip first real flag
+        const randIndex = Math.floor(Math.random() * randomPages.length);
+        flag.href = randomPages[randIndex];
+      }
+    });
+
+    function typeFlags() {
+      if(flagIndex < flags.length) {
+        flags[flagIndex].style.opacity = 1;
+        flagIndex++;
+        setTimeout(typeFlags, 500);
+      }
+    }
+
+    typeSubtitle();
+  </script>
 </body>
 </html>
