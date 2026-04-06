@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nothing to see here</title>
+  <style>
+    body {
+      background-color: black;
+      color: black;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>...</h1>
+
+  <p>
+    nothing here
+  </p>
+
+  <p>
+    key: FLAG-12345
+  </p>
+
+</body>
+</html>
